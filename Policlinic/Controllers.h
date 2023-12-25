@@ -1,27 +1,19 @@
 #pragma once
-//#include <random> 
-//#include <string> 
-//#include <iomanip> 
-//#include <cstdlib>
 #include <iostream>
-//#include <ctime>
-//#include <cctype>
-//#include <cstring>
-//#include <fstream>
-//#include <ios>
-//#include <vector>
-//#include "Patients.h"
-//#include "Doctors.h"
-//#define NOMINMAX
-//#include <Windows.h>
+#include "WriteFile.h"
+#include <vector>
+#include "Patients.h"
+#include "Doctors.h"
+#include "Services.h"
+
 using namespace std;
 
 class Controllers
 {
-public:
+private:
 	string Name;
 	int NumberOfCard;
-	double TotalCost;
+	//double TotalCost;
 	double Cost;
 	string NameOfServ;
 	string Diagnosis;
@@ -34,79 +26,26 @@ public:
 	vector<string> vTime;
 	vector <Doctors> vDoctors;
 	vector <Patients> vPatients;
-	int numerator = 1;
+	int iter = 0;
+	int searchNumberOfCard;
+	WriteFile* writeFile;
 
-	//double TotalCost(Services* services[])// посчитать сумму всех услуг
-	//{
-	//	double services = cost[]->GetTotalCost();
-	//	for (int i = 0, i < 100, i++)
-	//}
+public:
 
-	Controllers()
+
+	Controllers()//конструктор
 	{
 		CreateModel();
-	}
-	//файл ыектор доктора
-	void writeFile(Doctors doctors[])
-	{
-		ofstream file("Doctors.txt");
+		writeFile = new WriteFile();
 	}
 
-	//запись файлf вектор пациенты
-	void writeFile(Patients patients[])
-	{
-		ofstream file("Patients.txt");
-	}
-
-	//файл вектор услуги
-	void writeFile(Services services[])
-	{
-		ofstream file("Services.txt");
-		if (!file)
-		{
-			cout << "Unable to open the file." << endl;
-		}
-		//else
-
-		//{ // открытие файла для записи
-		//	for (int i = 0; i < vServices.size(); i++)
-		//	{
-		//		/*vServices.at(i) = i;
-		//		cout << vServices.at(i);*/
-		//		/*file << left << setw(20);
-		//		file << services[i];*/
-		//	}
-		//}
-	}
-
-	void writeFile(string date[])
-	{
-		ofstream file("Date.txt");
-		if (!file)
-		{
-			cout << "Unable to open the file." << endl;
-		}
-	}
-
-
-	double calculateTotalCost(const vector <Services> vServices)
-	{
-		double totalCost = 0.0;
-		for (Services ser : vServices)
-		{
-			totalCost += ser.GetCost();
-
-		}
-		return TotalCost;
-	}
-	void Three()
+	void Three()//метод для выбора категории записи
 	{
 		vector <Services> servis;
+
 		int iter = 0;
 		int salary = 0;
 		string iterText;
-		//int ID;
-		int amount = 0;
 		do
 		{
 			cout << " Выберите категорию"
@@ -117,7 +56,7 @@ public:
 				<< endl;
 			cin >> choice;
 			system("cls");
-			if (choice == '1')
+			if (choice == '1')//вывод инъекций
 			{
 				cout << "#" << setw(25) << "Процедура" << setw(10) << "Стоимость" << endl;
 				for (Services cl : vServices)
@@ -125,15 +64,11 @@ public:
 
 					if (cl.GetCategory() == "Инъекции")
 					{
-						cout << cl.GetId() << setw(15) << cl.GetNameOfserv() << setw(10) << cl.GetCost() << endl;
+						cout << cl.GetId()+1 << setw(15) << cl.GetNameOfserv() << setw(10) << cl.GetCost() << endl;
 					}
-
 				}
-
-
-				//cout << PrintThree() << endl;
 			}
-			if (choice == '2')
+			if (choice == '2')//вывод анализов
 			{
 				cout << "#" << setw(25) << "Процедура" << setw(15) << "Стоимость" << endl;
 
@@ -141,70 +76,67 @@ public:
 				{
 					if (cl.GetCategory() == "Анализы")
 					{
-						cout << cl.GetId() << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
+						cout << cl.GetId()+1 << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
 					}
 				}
 
 			}
-			if (choice == '3')
+			if (choice == '3')//вывод справок
 			{
 				cout << "#" << setw(25) << "Процедура" << setw(15) << "Стоимость" << endl;
 				for (Services cl : vServices)
 				{
 					if (cl.GetCategory() == "Справки")
 					{
-						cout << cl.GetId() << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
+						cout << cl.GetId()+1 << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
 					}
 				}
 			}
-			if (choice != '4')
+			if (choice != '4')//выводится при любом значении
 			{
 
-
-				cout << "выбрать услугу y/n: ";
+				cout << "Чтобы выбрать услугу  нажмите \"y\" " << endl;
+				cout << "Вернуться в меню услуг -\"n\"";
 				cin >> iterText;
 				if (iterText == "y")
 				{
-					cout << "\n номер услуги: " << endl;
+					cout << "\n Номер услуги: " << endl;
 					cin >> iterText;
 					iter = stoi(iterText);
-					for (Services serv : vServices)
+					for (Services serv : vServices)//для выбранных услуг отдельно
 					{
-						if (serv.GetId() == iter)
+						if (serv.GetId()+1 == iter)
 						{
 							servis.push_back(serv);
 						}
 					}
-					//посчитать количество выбраных проц
 
 				}
 			}
 			system("cls");
-			cout << "количество процедур " << servis.size() << endl;
+			cout << "Количество выбранных процедур: " << servis.size() << endl;
 
-		} while (choice != '4');
-
-		//cout << setw(40) << "Корзина пациента:"<<  << endl << endl;
+		} while (choice != '4');//когда нажато готово
+		/*for(Patients pat: vPatients){
+		cout << setw(40) << "Корзина пациента:"<<pat.GetSurname()<< endl;}*/
 		cout << setw(25) << "Процедура" << setw(15) << "Стоимость" << endl;
 
-		for (Services servis : servis)
+		for (Services serv : servis)
 		{
-			servis.Print();
-			salary += servis.GetCost();
+			serv.Print();
+			salary += serv.GetCost();
 		}
 
 		cout << endl;
 		cout << endl;
 		cout << endl;
 		cout << "Общая стоимость: " << salary << endl;
-		//cout << "количество процедур " << servis.size() << endl;
 
 		salary = 0;
+		Menu();
 	}
-	void Menu()
+	void Menu()//основное меню
 	{
-		/*SetConsoleCP(1251);
-		SetConsoleOutputCP(1251);*/
 		do
 		{
 			cout << "\n Меню"
@@ -212,197 +144,251 @@ public:
 				<< "\n 2. Записать пациента"
 				<< "\n 3. Дополнительные услуги"
 				<< "\n 4. Выход"
-				<< "\nYour choice " << endl;
+				<< "\n Ваш выбор " << endl;
 			cin >> choice;
+			bool found = true;
 
 			switch (choice)
 			{
-			case '1':
-				cout << "способ поиска"
-					<< "\n 1. По списку"
+			case '1'://инф о пациенте
+				system("cls");
+				cout << "Cпособ поиска:"
+					<< "\n 1. По пасспорту"
 					<< "\n 2. По номеру карты" << endl;
 				cin >> choice;
-
-				if (choice == '1')
+				
+				if (choice == '1')// поиск по паспорту
 				{
-					/*string searchSurname;
-					string searchName;
-					cout << "Введите фамилию для поиска: ";
-					cin >> searchSurname;
-					cout << "Введите имя для поиска: ";
-					cin >> searchName;
+					int searchPassport;
+					system("cls");
+					cout << "Введите номер пасспорта: ";
+					cin >> searchPassport;
+					bool found = true;
 					for (Patients pat : vPatients)
 					{
-						if (searchSurname == pat.GetSurname())
+
+						if (searchPassport == pat.GetPassport())
 						{
-							if (searchName == pat.Getname())
-							{
-								cout << "имя" << pat.Getname() << endl;
-							}
-							cout << "Фамилия" << pat.GetSurname() << endl;
-
-
+							cout << "Имя:" << " " << pat.Getname() << endl;
+							cout << "Фамилия:" << " " << pat.GetSurname() << endl;
 							cout << "Возраст:" << " " << pat.GetAge() << endl;
-							cout << "Номер карты пациента " << " " << pat.GetNumberOfCard() << ":" << endl;
-							cout << "Текущий диагноз" << " " << pat.GetDiagnosis() << endl;
+							cout << "Номер карты пациента: " << " " << pat.GetNumberOfCard() << endl;
+							cout << "Текущий диагноз:" << " " << pat.GetDiagnosis() << endl;
+							found = false;//остановка
 						}
-					}*/
-					//вывести оставшуюся инфу о пац и вывод при ошибке ввода фамилии
+					}
+
+					if (found)
+					{
+						cout << "Пациент с таким номером пасспорта не найден" << endl;
+					}
 				}
-				if (choice == '2')
+				if (choice == '2')//поиск по номеру карты
 				{
 					int searchNumberOfCard;
 					system("cls");
 					cout << "Введите номер карты для поиска: ";
 					cin >> searchNumberOfCard;
+					bool found = true;
 
 					for (Patients pat : vPatients)
 					{
 						if (searchNumberOfCard == pat.GetNumberOfCard())
 						{
-							//cout << "Номер карты пациента " << " " << pat.GetNumberOfCard() << endl;
 							cout << "Фамилия:" << " " << pat.GetSurname() << endl;
 							cout << "Имя:" << " " << pat.GetName() << endl;
 							cout << "Возраст:" << " " << pat.GetAge() << endl;
-							//cout << "Номер карты пациента " << " " << pat.GetNumberOfCard() << ":" << endl;
 							cout << "Текущий диагноз:" << " " << pat.GetDiagnosis() << endl;
-							//вывести оставшуюся инфу о пац и вывод при ошибке ввода номера карты
+							found = false;
+						}
+
+						if (found)//если введеное значение не найдено
+						{
+							cout << "Пациент с таким номером карты не найден";
 						}
 					}
 				}
 				break;
 
-			case '2':
-				cout << "введите номер карты пациента:" << " ";
-				cin >> NumberOfCard;
-				//cout << "Пациент:" << pat.GetSurname();
-				cout << "Выберите специалиста:"
-					<< "\n 1. Хирург"
-					<< "\n 2. Терапевт"
-					<< "\n 3. Офтальмолог"
-					<< "\n 4. Стоматолог"
-					<< "\n 5. Отоларинголог" << endl;
-				cin >> choice;
-				switch (choice)
+			case '2'://записать пациента
+					int searchNumberOfCard;
+				do
 				{
-				case'1':
-					for (Doctors doc : vDoctors)
-					{
-						if (doc.GetSpeciality() == "Хирург")
-						{
-							TimeVaribol(doc);
-						}
-					}
-					break;
-				case'2':
-					for (Doctors doc : vDoctors)
-					{
-						if (doc.GetSpeciality() == "Терапевт")
-						{
-							TimeVaribol(doc);
-						}
-					}
-					break;
-				case'3':
-					for (Doctors doc : vDoctors)
-					{
-						if (doc.GetSpeciality() == "Офтальмолог")
-						{
-							TimeVaribol(doc);
-						}
-					}
-					break;
-				case'4':
-					for (Doctors doc : vDoctors)
-					{
-						if (doc.GetSpeciality() == "Стоматолог")
-						{
-							TimeVaribol(doc);
-						}
-					}
-					break;
-				case'5':
-					for (Doctors doc : vDoctors)
-					{
-						if (doc.GetSpeciality() == "Отоларинголог")
-						{
-							TimeVaribol(doc);
-						}
-					}
-					break;
-				default:
-					break;
-				}
+					system("cls");
+					cout << "\n Введите номер карты пациента:" << " ";
+					cin >> searchNumberOfCard;
 
-				break;
+					for (Patients pat : vPatients)
+					{
+						if (searchNumberOfCard == pat.GetNumberOfCard())//сравнение введеного знач с данными
+						{
+							cout << "Фамилия:" << " " << pat.GetSurname() << endl;
+							cout << "Имя:" << " " << pat.GetName() << endl;
+							cout << "Возраст:" << " " << pat.GetAge() << endl;
+							cout << "Текущий диагноз:" << " " << pat.GetDiagnosis() << endl;
+							found = false;
 
-
+							ChoiceDoctor();
+						}
+					}
+					if (found)//если введеное значение не найдено
+					{
+						cout << "Пациент с таким номером карты не найден" << endl;
+						cout << "для выхода нажмите \"0\""<< endl;
+					}
+				} while (found && searchNumberOfCard != 0);//до тех пор, пока не будет нажат 0 
+				system("cls");
+				Menu();
 			case '3':
 
-				Three();
+				Three();//метод выбора категории записи
 
 				break;
 			}
-		} while (choice != '4');
+		}
+		while (choice != '4');//выход из программы
+		return;
 	}
-	void TimeVaribol(Doctors doc)
+
+
+	void TimeVaribol(Doctors doc, Patients pat)//метод вывода времени и даты
 	{
-		if (choice != '5')
+		
+		string iterText;
+		system("cls");
+		cout << "Выберите дату:" << endl << "\n";
+
+		for (int i = 0; i < vDate.size(); i++)
 		{
-			string iterText;
-			cout << "Выб дату:" << endl << "\n";
+			cout << i + 1 << "  " << vDate[i] << endl;//вывод даты
+		}
 
-			for (int i = 0; i < vDate.size(); i++)
+		cin >> iterText;
+		int position = stoi(iterText);
+		system("cls");
+		cout << "Ваш выбор даты:" << vDate[position - 1] << endl;
+
+		cout << "Выберите время:" << endl;
+		for (int i = 0; i < vTime.size(); i++)
+		{
+			cout << i + 1 << " " << vTime[i] << endl;//вывод времени
+		}
+
+		cin >> iterText;
+		system("cls");
+		cout << "Ваш выбор даты:" << vDate[position - 1] << endl;
+		cout << "Ваш выбор Времени:" << vTime[position - 1] << endl;
+
+		cout << "Для подтверждения записи нажмите \"у\"" << "  " << endl;;
+		cout << "Для выхода в меню нажмите \"n\"" << "  " << endl;
+		cin >> iterText;
+		system("cls");
+		bool found = true;
+		if (iterText == "y")//при подтверждении записи
+		{
+			cout << "Запись создана" << "\n"
+				<< "Пациент:" << " " << pat.GetSurname() << " " << pat.GetName() << "\n"
+				<< "Возраст:" << " " << pat.GetAge() << "\n"
+				<< "Записан на : " << vDate[position - 1] << " в " << vTime[position - 1] << "\n" << endl;
+			cout << "К специалисту:" << doc.GetSpeciality() << "\n"
+				<< "ФИО:" << " " << doc.GetSurname() << " " << doc.GetName() << "\n"
+				<< "Номер кабинета: #" << doc.GetCabinetNumber() << endl;
+			Menu();
+		}
+		if (iterText == "n")//при отказе от записи
+		{
+			Menu();
+		}
+		
+	}
+	void ChoiceDoctor()//метод выбора врача и вывода времени
+	{
+		cout << "Выберите специалиста:"
+			<< "\n 1. Хирург"
+			<< "\n 2. Терапевт"
+			<< "\n 3. Офтальмолог"
+			<< "\n 4. Стоматолог"
+			<< "\n 5. Отоларинголог" << endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case'1':
+			for (Doctors doc : vDoctors)
 			{
-				cout << i + 1 << "  " << vDate[i] << endl;
-			}
-
-			cin >> iterText;
-			int position = stoi(iterText);
-			system("cls");
-			cout << "Ваш выбор даты:" << vDate[position - 1] << endl;
-
-
-			cout << "выб время:" << endl;
-			for (int i = 0; i < vTime.size(); i++)
-			{
-				cout << i + 1 << " " << vTime[i] << endl;
-			}
-
-			cin >> iterText;
-			system("cls");
-			cout << "Ваш выбор даты:" << vDate[position - 1] << endl;
-			cout << "Ваш выбор Времени:" << vTime[position - 1] << endl;
-
-
-			cout << "Для подтверждения записи нажмите у" << "  ";
-			cin >> iterText;
-			system("cls");
-			if (iterText == "y")
-			{
-				for (Patients pat : vPatients)//цикл все портит, выводит всех пац
+				for (Patients pat : vPatients)
 				{
-					cout << "Запись создана" << "\n"
-						<< "Пациент:" << " " << pat.GetSurname() << " " << pat.GetName() << "\n"
-						<< "Возраст" << pat.GetAge() << "\n"
-						<< "Pаписан на : " << vDate[position - 1] << " в " << vTime[position - 1] << "\n"
-						<< "К специалисту:" << doc.GetSpeciality() << "\n"
-						<< "ФИО:" << " " << doc.GetSurname() << " " << doc.GetName() << "\n"
-						<< "Номер кабинета: #" << doc.GetCabinetNumber() << endl;
+					if (doc.GetSpeciality() == "Хирург")
+					{
+						TimeVaribol(doc, pat);//метод выбора времени
+					}
 				}
 			}
+			break;
+		case'2':
+			for (Doctors doc : vDoctors)
+			{
+				for (Patients pat : vPatients)
+				{
+					if (doc.GetSpeciality() == "Терапевт")
+					{
+						TimeVaribol(doc, pat);
+					}
+				}
+			}
+			break;
+
+		case'3':
+			for (Doctors doc : vDoctors)
+			{
+				for (Patients pat : vPatients)
+				{
+					if (doc.GetSpeciality() == "Офтальмолог")
+					{
+						TimeVaribol(doc, pat);
+					}
+				}
+			}
+			break;
+
+		case'4':
+			for (Doctors doc : vDoctors)
+			{
+				for (Patients pat : vPatients)
+				{
+					if (doc.GetSpeciality() == "Стоматолог")
+					{
+						TimeVaribol(doc, pat);
+					}
+				}
+			}
+			break;
+
+		case'5':
+			for (Doctors doc : vDoctors)
+			{
+				for (Patients pat : vPatients)
+				{
+					if (doc.GetSpeciality() == "Отоларинголог")
+					{
+						TimeVaribol(doc, pat);
+					}
+				}
+			}
+			break;
+
+		default:
+			cout << "Выберите другой вариант";
+			Menu();
+			break;
 		}
+
 	}
-	void CreateModel()
+	void CreateModel()//метод создания экземпляров
 	{
 
 		setlocale(LC_ALL, "Russian");
-		//string Category;
-		char choice;
-
-
-
-		//Services* servises = new Services(Category,NameOfServ, Cost);
+	
+		// Services(Category,NameOfServ, Cost);
 
 		vServices.push_back((*new Services("Инъекции", "в/м инъекции", 500)));
 		vServices.push_back((*new Services("Инъекции", "в/в инъекции", 500)));
@@ -413,17 +399,16 @@ public:
 		vServices.push_back((*new Services("Справки", "Мед книжка", 1000)));
 
 
-		//vector <Patients> vPatients; //пуст вектора
 
-		//Patients* patients = new Patients(Name, surname, age, NumberOfCard, Diagnosis);
+		//Patients(Name, surname, age, NumberOfCard, Diagnosis, passport);
 
-		vPatients.push_back((*new Patients("Иван", "Петров", 23, 12, "Простуда")));
-		vPatients.push_back((*new Patients("Петр", "Петров", 45, 789012, "Грипп")));
-		vPatients.push_back((*new Patients("Анна", "Сидорова", 19, 345678, "Ангина")));
-		vPatients.push_back((*new Patients("А", "А", 35, 11, "Плоскостопие")));
-		vPatients.push_back((*new Patients("Екатерина", "Фомина", 27, 588522, "Сколиоз")));
-		vPatients.push_back((*new Patients("Олег", "Жмурин", 87, 23425, "Острая боль в животе")));
-		vPatients.push_back((*new Patients("Зоя", "Космодемьянская", 40, 27438, "Средний кариес")));
+		vPatients.push_back((*new Patients("Иван", "Петров", 23, 12, "Простуда", 1)));
+		vPatients.push_back((*new Patients("Петр", "Петров", 45, 789012, "Грипп", 2222)));
+		vPatients.push_back((*new Patients("Анна", "Сидорова", 19, 345678, "Ангина", 3333)));
+		vPatients.push_back((*new Patients("А", "А", 35, 11, "Плоскостопие", 4444)));
+		vPatients.push_back((*new Patients("Екатерина", "Фомина", 27, 588522, "Сколиоз", 5555)));
+		vPatients.push_back((*new Patients("Олег", "Жмурин", 87, 23425, "Острая боль в животе", 6666)));
+		vPatients.push_back((*new Patients("Зоя", "Космодемьянская", 40, 27438, "Средний кариес", 7777)));
 
 		//Doctors(string name, string surname, int age, string speciality, int cabinetNumber)
 		vDoctors.push_back(*new Doctors("Иван", "Иванов", 56, "Хирург", 1));
@@ -432,7 +417,6 @@ public:
 		vDoctors.push_back((*new Doctors("Иван", "Иванов", 49, "Стоматолог", 4)));
 		vDoctors.push_back((*new Doctors("Иван", "Иванов", 37, "Отоларинголог", 5)));
 
-		//vector <>//время и дата(потом добавить ее к врачам) 
 		//vector<string> vDate;
 		vDate.push_back(*new string("12.10.2023"));
 		vDate.push_back(*new string("13.10.2023"));
@@ -446,7 +430,8 @@ public:
 		vTime.push_back(*new string("12:30"));
 		vTime.push_back(*new string("14:00"));
 		vTime.push_back(*new string("15:30"));
-
+		
+		writeFile->WritePatient(vPatients);
 	}
 };
 

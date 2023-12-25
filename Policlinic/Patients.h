@@ -10,10 +10,11 @@ using namespace std;
 class Patients: public People
 {
 protected:
+	int Passport;
 	int NumberOfCard;
 	string Diagnosis;
 public:
-	Patients(string name, string surname, int age, int numberOfCard, string diagnosis)
+	Patients(string name, string surname, int age, int numberOfCard, string diagnosis, int passport)
 		:People(name, age, surname)
 	{
 		this->name = name;
@@ -21,6 +22,7 @@ public:
 		this->age = age;
 		this->NumberOfCard = numberOfCard;
 		this->Diagnosis = diagnosis;
+		Passport = passport;
 	}
 	string GetName()
 	{
@@ -41,6 +43,10 @@ public:
 	string GetDiagnosis()
 	{
 		return Diagnosis;
+	}
+	int GetPassport()
+	{
+		return Passport;
 	}
 };
 

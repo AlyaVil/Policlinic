@@ -135,6 +135,7 @@
     <ClCompile Include="People.cpp" />
     <ClCompile Include="Policlinic.cpp" />
     <ClCompile Include="Services.cpp" />
+    <ClCompile Include="WriteFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Busket.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Patients.h" />
     <ClInclude Include="People.h" />
     <ClInclude Include="Services.h" />
+    <ClInclude Include="WriteFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
