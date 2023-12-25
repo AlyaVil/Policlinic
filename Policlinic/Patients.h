@@ -1,10 +1,8 @@
-//#include <random> 
-//#include <string> 
-//#include <iomanip> 
-//#include <cstdlib>
-//#include <ctime>
+
 #include <iostream> 
 #include "People.h"
+#include "Services.h"
+
 using namespace std;
 #pragma once
 class Patients: public People
@@ -24,6 +22,7 @@ public:
 		this->Diagnosis = diagnosis;
 		Passport = passport;
 	}
+	
 	string GetName()
 	{
 		return name;

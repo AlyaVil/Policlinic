@@ -64,7 +64,7 @@ public:
 
 					if (cl.GetCategory() == "Инъекции")
 					{
-						cout << cl.GetId()+1 << setw(15) << cl.GetNameOfserv() << setw(10) << cl.GetCost() << endl;
+						cout << cl.GetId() + 1 << setw(15) << cl.GetNameOfserv() << setw(10) << cl.GetCost() << endl;
 					}
 				}
 			}
@@ -76,7 +76,7 @@ public:
 				{
 					if (cl.GetCategory() == "Анализы")
 					{
-						cout << cl.GetId()+1 << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
+						cout << cl.GetId() + 1 << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
 					}
 				}
 
@@ -88,7 +88,7 @@ public:
 				{
 					if (cl.GetCategory() == "Справки")
 					{
-						cout << cl.GetId()+1 << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
+						cout << cl.GetId() + 1 << setw(25) << cl.GetNameOfserv() << setw(15) << cl.GetCost() << endl;
 					}
 				}
 			}
@@ -105,7 +105,7 @@ public:
 					iter = stoi(iterText);
 					for (Services serv : vServices)//для выбранных услуг отдельно
 					{
-						if (serv.GetId()+1 == iter)
+						if (serv.GetId() + 1 == iter)
 						{
 							servis.push_back(serv);
 						}
@@ -156,7 +156,7 @@ public:
 					<< "\n 1. По пасспорту"
 					<< "\n 2. По номеру карты" << endl;
 				cin >> choice;
-				
+
 				if (choice == '1')// поиск по паспорту
 				{
 					int searchPassport;
@@ -180,7 +180,7 @@ public:
 
 					if (found)
 					{
-						cout << "Пациент с таким номером пасспорта не найден" << endl;
+						cout << "Пациент с таким номером паспорта не найден" << endl;
 					}
 				}
 				if (choice == '2')//поиск по номеру карты
@@ -211,13 +211,13 @@ public:
 				break;
 
 			case '2'://записать пациента
-					int searchNumberOfCard;
+				int searchNumberOfCard;
 				do
 				{
 					system("cls");
 					cout << "\n Введите номер карты пациента:" << " ";
 					cin >> searchNumberOfCard;
-
+					found = true;
 					for (Patients pat : vPatients)
 					{
 						if (searchNumberOfCard == pat.GetNumberOfCard())//сравнение введеного знач с данными
@@ -228,32 +228,32 @@ public:
 							cout << "Текущий диагноз:" << " " << pat.GetDiagnosis() << endl;
 							found = false;
 
-							ChoiceDoctor();
+							ChoiceDoctor(pat);
 						}
 					}
-					if (found)//если введеное значение не найдено
+					if (found && searchNumberOfCard != 0)//если введеное значение не найдено
 					{
 						cout << "Пациент с таким номером карты не найден" << endl;
-						cout << "для выхода нажмите \"0\""<< endl;
+						cout << "для выхода нажмите \"0\"" << endl;
+						system("pause");
 					}
+
 				} while (found && searchNumberOfCard != 0);//до тех пор, пока не будет нажат 0 
 				system("cls");
-				Menu();
+				break;
 			case '3':
 
 				Three();//метод выбора категории записи
 
 				break;
 			}
-		}
-		while (choice != '4');//выход из программы
-		return;
+		} while (choice != '4');//выход из программы
 	}
 
 
 	void TimeVaribol(Doctors doc, Patients pat)//метод вывода времени и даты
 	{
-		
+
 		string iterText;
 		system("cls");
 		cout << "Выберите дату:" << endl << "\n";
@@ -293,15 +293,15 @@ public:
 			cout << "К специалисту:" << doc.GetSpeciality() << "\n"
 				<< "ФИО:" << " " << doc.GetSurname() << " " << doc.GetName() << "\n"
 				<< "Номер кабинета: #" << doc.GetCabinetNumber() << endl;
-			Menu();
+			writeFile->WriteResult(doc, pat);
+			system("pause");
 		}
-		if (iterText == "n")//при отказе от записи
+		if (iterText == "n")//при отказе от записи 
 		{
-			Menu();
+			return;
 		}
-		
 	}
-	void ChoiceDoctor()//метод выбора врача и вывода времени
+	void ChoiceDoctor(Patients pat)//метод выбора врача и вывода времени
 	{
 		cout << "Выберите специалиста:"
 			<< "\n 1. Хирург"
@@ -315,24 +315,18 @@ public:
 		case'1':
 			for (Doctors doc : vDoctors)
 			{
-				for (Patients pat : vPatients)
+				if (doc.GetSpeciality() == "Хирург")
 				{
-					if (doc.GetSpeciality() == "Хирург")
-					{
-						TimeVaribol(doc, pat);//метод выбора времени
-					}
+					TimeVaribol(doc, pat);//метод выбора времени
 				}
 			}
 			break;
 		case'2':
 			for (Doctors doc : vDoctors)
 			{
-				for (Patients pat : vPatients)
+				if (doc.GetSpeciality() == "Терапевт")
 				{
-					if (doc.GetSpeciality() == "Терапевт")
-					{
-						TimeVaribol(doc, pat);
-					}
+					TimeVaribol(doc, pat);
 				}
 			}
 			break;
@@ -340,12 +334,9 @@ public:
 		case'3':
 			for (Doctors doc : vDoctors)
 			{
-				for (Patients pat : vPatients)
+				if (doc.GetSpeciality() == "Офтальмолог")
 				{
-					if (doc.GetSpeciality() == "Офтальмолог")
-					{
-						TimeVaribol(doc, pat);
-					}
+					TimeVaribol(doc, pat);
 				}
 			}
 			break;
@@ -353,12 +344,9 @@ public:
 		case'4':
 			for (Doctors doc : vDoctors)
 			{
-				for (Patients pat : vPatients)
+				if (doc.GetSpeciality() == "Стоматолог")
 				{
-					if (doc.GetSpeciality() == "Стоматолог")
-					{
-						TimeVaribol(doc, pat);
-					}
+					TimeVaribol(doc, pat);
 				}
 			}
 			break;
@@ -366,12 +354,9 @@ public:
 		case'5':
 			for (Doctors doc : vDoctors)
 			{
-				for (Patients pat : vPatients)
+				if (doc.GetSpeciality() == "Отоларинголог")
 				{
-					if (doc.GetSpeciality() == "Отоларинголог")
-					{
-						TimeVaribol(doc, pat);
-					}
+					TimeVaribol(doc, pat);
 				}
 			}
 			break;
@@ -387,12 +372,12 @@ public:
 	{
 
 		setlocale(LC_ALL, "Russian");
-	
+
 		// Services(Category,NameOfServ, Cost);
 
 		vServices.push_back((*new Services("Инъекции", "в/м инъекции", 500)));
-		vServices.push_back((*new Services("Инъекции", "в/в инъекции", 500)));
-		vServices.push_back((*new Services("Инъекции", "п/к инъекции", 500)));
+		vServices.push_back((*new Services("Инъекции", "в/в инъекции", 600)));
+		vServices.push_back((*new Services("Инъекции", "п/к инъекции", 200)));
 		vServices.push_back((*new Services("Анализы", "Анализ крови на сахар", 100)));
 		vServices.push_back((*new Services("Анализы", "Анализ крови общий", 100)));
 		vServices.push_back((*new Services("Справки", "Больничный лист", 800)));
@@ -402,20 +387,21 @@ public:
 
 		//Patients(Name, surname, age, NumberOfCard, Diagnosis, passport);
 
-		vPatients.push_back((*new Patients("Иван", "Петров", 23, 12, "Простуда", 1)));
+		vPatients.push_back((*new Patients("Иван", "Проверочный", 23, 12, "Простуда", 1)));
 		vPatients.push_back((*new Patients("Петр", "Петров", 45, 789012, "Грипп", 2222)));
 		vPatients.push_back((*new Patients("Анна", "Сидорова", 19, 345678, "Ангина", 3333)));
-		vPatients.push_back((*new Patients("А", "А", 35, 11, "Плоскостопие", 4444)));
+		vPatients.push_back((*new Patients("Галина", "Андропова", 35, 11, "Плоскостопие", 4444)));
 		vPatients.push_back((*new Patients("Екатерина", "Фомина", 27, 588522, "Сколиоз", 5555)));
 		vPatients.push_back((*new Patients("Олег", "Жмурин", 87, 23425, "Острая боль в животе", 6666)));
 		vPatients.push_back((*new Patients("Зоя", "Космодемьянская", 40, 27438, "Средний кариес", 7777)));
 
 		//Doctors(string name, string surname, int age, string speciality, int cabinetNumber)
-		vDoctors.push_back(*new Doctors("Иван", "Иванов", 56, "Хирург", 1));
-		vDoctors.push_back((*new Doctors("Иван", "Иванов", 34, "Терапевт", 2)));
-		vDoctors.push_back((*new Doctors("Иван", "Иванов", 45, "Офтальмолог", 3)));
-		vDoctors.push_back((*new Doctors("Иван", "Иванов", 49, "Стоматолог", 4)));
-		vDoctors.push_back((*new Doctors("Иван", "Иванов", 37, "Отоларинголог", 5)));
+		vDoctors.push_back(*new Doctors("Алексей", "Здоровый", 56, "Хирург", 1));
+		vDoctors.push_back((*new Doctors("Ольга", "Потапова", 34, "Терапевт", 2)));
+		vDoctors.push_back((*new Doctors("Ирина", "Цветочная", 45, "Офтальмолог", 3)));
+		vDoctors.push_back((*new Doctors("Михаил", "Мечник", 49, "Стоматолог", 4)));
+		vDoctors.push_back((*new Doctors("Карина", "Васильева", 37, "Отоларинголог", 5)));
+
 
 		//vector<string> vDate;
 		vDate.push_back(*new string("12.10.2023"));
@@ -430,8 +416,9 @@ public:
 		vTime.push_back(*new string("12:30"));
 		vTime.push_back(*new string("14:00"));
 		vTime.push_back(*new string("15:30"));
-		
+
 		writeFile->WritePatient(vPatients);
+		writeFile->WriteDoctor(vDoctors);
 	}
 };
 

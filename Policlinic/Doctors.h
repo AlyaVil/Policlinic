@@ -1,8 +1,6 @@
 #include <random> 
 #include <string> 
 #include <iomanip> 
-//#include <cstdlib>
-//#include <ctime>
 #include <iostream> 
 #include "People.h"
 using namespace std;
